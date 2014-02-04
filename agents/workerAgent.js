@@ -25,6 +25,8 @@ myAgent.RPCfunctions.getSchedule = function (params, callback) {
 myAgent.RPCfunctions.updateSchedule = function (params, callback) {
 
 	this.schedule = params.schedule;
+	console.log(this.schedule);
+
     callback({id: 0, result: "ok", error:null });
 
 };
@@ -33,7 +35,7 @@ myAgent.RPCfunctions.updateSchedule = function (params, callback) {
 myAgent.RPCfunctions.reportNC = function (params, callback) {
 
 	this.send("http://127.0.0.1:3000/" + this.namePrefix + "/Peet", 
-					{method:"reportNC", id:0, params: {NC: params.NC} }, 
+					{method:"reportNC", id:0, params: {NC: {cause: params.cause, origin: this.agentName} } }, 
 					function(answer){ }); //dont have to do anything with the answer... we're just pushing the result
 
     callback({id: 0, result: "reported", error:null });

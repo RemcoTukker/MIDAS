@@ -33,21 +33,30 @@ myAgent.RPCfunctions.fixNCs = function (params, callback) {
 myAgent.RPCfunctions.cookUpNewSchedule = function (params, callback) {
 
 	var newSchedule = [];
+
+	console.log("scheduling anew " + this.agentName)
+
+	for (var prop in this.RPCfunctions) console.log(prop);
+
 	var date = new Date();
-	var time = date.getTime();
-	var endTime = date.getTime();
+	var date2 = new Date();
+	//var time = date.getTime();
+	//var endTime = date.getTime();
 
 	for (var i = 0; i < 5; i++) {
-		endTime.setHours( time.getHours() + (Math.random() * 6));
-		newSchedule.push({id:i, content:'Scrubbing the deck', start:time, end:endTime});
-		time = endTime;
+		var mins = Math.round( Math.random() * 300 );
+		console.log(mins);
+		date2.setMinutes( date2.getMinutes() + mins);
+		newSchedule.push({id:i, content:'Scrubbing the deck', start:date.getTime(), end:date2.getTime()});
+		console.log(date + " " + date2);
+		date.setTime(date2.getTime());
 	}
 
-	this.send("http://127.0.0.1:3000/" + this.namePrefix + "/Remco", 
+	this.send("http://127.0.0.1:3000/agents/Remco", 
 					{method:"updateSchedule", id:0, params: {schedule: newSchedule} }, 
 					function(answer){ }); //dont have to do anything with the answer... we're just pushing the result
 
-	this.send("http://127.0.0.1:3000/" + this.namePrefix + "/Giovanni", 
+	this.send("http://127.0.0.1:3000/agents/Giovanni", 
 					{method:"updateSchedule", id:0, params: {schedule: newSchedule} }, 
 					function(answer){ }); //dont have to do anything with the answer... we're just pushing the result
 

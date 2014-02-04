@@ -32,6 +32,11 @@ window.onload = function() {
   var timeline = new vis.Timeline(container, items, options);
   // end >
 
+
+
+
+
+
   /**
    * This function communicates with the agent by construnction a HTTP POST request.
    *
@@ -79,29 +84,24 @@ window.onload = function() {
     }
   }
 
-  /**
-   * ask the status collector for an stringified array of current states for all connected agents.
-   * this is then handled in the processData function.
-   */
-  function getAgentData() {
-    askAgent(agentUrl + "statusCollector","getData", {}, function(response) {
-      var receivedMsg = JSON.parse(response);
-      var data = receivedMsg['data'];
-      processData(data, "current");
-    });
-  }
 
 
 
-  /**
-   * ask the status collector for an stringified array of current states for all connected agents.
-   * this is then handled in the processData function.
-   */
+
+
   function getHistoryData() {
-    askAgent(agentUrl + "historyCollector","getData", {}, function(response) {
-      var receivedMsg = JSON.parse(response);
-      var data = receivedMsg['data'];
-      processData(data,"history");
+    askAgent(agentUrl + agentName, "getSchedule", {}, function(response) {
+		console.log(response);      
+
+		var receivedMsg = JSON.parse(response);
+//      var data = receivedMsg['data'];
+//       processData(data,"history");
+
+		//var date = new Date();
+		//var time = date.getTime();
+ 		//timeline.setItems([{id:1, content:"hai", start:time}]);
+		
+		timeline.setItems(receivedMsg.result);
     });
   }
 
@@ -130,39 +130,6 @@ window.onload = function() {
   }
 
 
-  /**
-   * This function handles the data from each agent and stores it into the dataset if it is new
-   * For all publishing sensors, we create control gui elements.
-   *
-   * @param {Object} dataObject  | object of {agentId: "string", ...}
-   * @param {String} agentId
-   */
-  function handleAgentData(dataObject, agentId) {
-    if (dataObject) {
-      if (!agents.hasOwnProperty(agentId)) {
-        createNewAgentUI(agentId);
-        agents[agentId] = "active";
-      }
-      insertIntoDataset(dataObject[agentId], agentId);
-      states[agentId] = dataObject[agentId];
-    }
-  }
-
-  /**
-   * This function handles the data from each agent and stores it into the dataset if it is new
-   *
-   * @param {Object} dataObject | object of {agentId: [], ...}
-   * @param {String} agentId
-   */
-  function handleAgentHistory(dataObject, agentId) {
-    if (dataObject) {
-      var agentDataset = dataObject[agentId];
-      for (var i = 0; i < agentDataset.length; i++) {
-        insertIntoDataset(agentDataset[i], agentId);
-        states[agentId] = agentDataset[i];
-      }
-    }
-  }
 
 
   /**
@@ -223,39 +190,6 @@ window.onload = function() {
     }
   }
 
-  /**
-   * This function returns the right icon type for the agents message to put in the timeline
-   * If this cannot be found, the agentID is returned
-   *
-   * @param {Object} dataObject
-   * @param {String} agentId
-   * @returns {String}
-   */
-  function getContent(dataObject ,agentId) {
-    var agentIdArray = agentId.split("-");
-    var agentIdType  = agentIdArray[0];
-    var content = agentId;
-
-    switch (agentIdType) {
-      case "doorAgent":
-        if (dataObject.status == "1") {
-          content = '<img src="images/open_doorIcon.png" width="31px" height="35px" />';
-        }
-        else {
-          content = '<img src="images/closed_doorIcon.png" width="31px" height="35px" />';
-        }
-        break;
-      case "lampAgent":
-        if (dataObject.status == "1") {
-          content = '<img src="images/bulb_on.png" width="22px" height="35px" />';
-        }
-        else {
-          content = '<img src="images/bulb_off.png" width="22px" height="35px" />';
-        }
-        break;
-    }
-    return content;
-  }
 
   /**
    * This function places an item from the agent into the dataset.
@@ -288,10 +222,10 @@ window.onload = function() {
   // this creates the GUI elements, it will not add dupicate entrees.
   // the reason to do this here is that maybe we only want gui elements for sensors that
   // have been active in the last x time
-  getAgentData();
+  //getAgentData();
 
   // recheck the agent for new information
   var refresher = window.setInterval( function() {
-    getAgentData();
+    getHistoryData();
   }, updateInterval);
 }

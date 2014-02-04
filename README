@@ -18,9 +18,11 @@ USAGE
 	node MIDAS/midasdemo
 
 	This will launch a couple of agents communicating with one another. 
-	Use the browser to access the simple UIs to see what's going on in the MIDAS agents.
+	Use the browser to access the simple UIs to see what's going on in the MIDAS agents:
+	localhost:3000/gui/worker/Remco
+	localhost:3000/gui/worker/Giovanni
+	localhost:3000/gui/manager/Peet
 
 
 NB	I know that the directory structure is not ideal, but it works well enough for now :-)
 
-	
