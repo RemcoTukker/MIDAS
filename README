@@ -1,0 +1,16 @@
+MIDAS: agents part
+
+	The agents within MIDAS use a NodeJS version of Eve to represent physical entities in a factory. 
+	Documentation of Eve is available on http://almende.github.com/eve ; documentation of MIDAS is not ready yet.
+
+    Author:  Remco Tukker, 2013; Jos de Jong 2011-2012
+    License: Apache License, Version 2.0 
+             http://www.apache.org/licenses/LICENSE-2.0
+
+
+USAGE
+
+	download
+	npm install
+
+
