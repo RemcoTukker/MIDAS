@@ -28,10 +28,12 @@ app.use(express.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
+console.log(path.join(__dirname, 'public'));
+
 // 
 var eveOptions = {
 	services: { topics: {}, p2p: {transports: {localTransport: {}, httpRequest: {} } } }, // httpRequest 
-	agents: {filename: "mathAgent.js" }
+	agents: {Remco: {filename: "workerAgent.js" }, Giovanni: {filename: "workerAgent.js"}, Peet: {filename: "managerAgent.js"} }
 } 
 var eve = new Eve(eveOptions);
 
@@ -42,9 +44,18 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+// TODO: is this actually the best way to do this?
+app.all('*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With,  Content-Type");
+  next();
+});
+
+
+
 app.get('/', routes.index);
 app.get('/management', routes.management);
-//app.get('/users', user.list);
+app.get('/gui/*', routes.gui);
 app.post('/agents/*', eve.incomingFromExpress);
 
 http.createServer(app).listen(app.get('port'), function(){
