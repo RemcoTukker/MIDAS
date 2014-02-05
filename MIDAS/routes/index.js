@@ -5,7 +5,8 @@
 
 exports.index = function(req, res){
 
-  res.render('index', { title: JSON.stringify(req.url)});
+  //res.render('index', { title: JSON.stringify(req.url)});
+  res.render('index', { title: MIDAS agents demo});
 
 };
 
