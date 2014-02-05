@@ -119,7 +119,7 @@ window.onload = function() {
 
                 // add the item text
 				console.log(receivedMsg.result[i]);
-                listItem.innerHTML = receivedMsg.result[i].cause + " " + receivedMsg.result[i].origin;
+                listItem.innerHTML = "NC reported by " + receivedMsg.result[i].origin + ": " + receivedMsg.result[i].cause;
 
                 // add listItem to the listElement
                 listElement.appendChild(listItem);

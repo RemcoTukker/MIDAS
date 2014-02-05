@@ -15,6 +15,8 @@ function HttpRequest(incoming, options) {
 	
 	options = options || {}; //TODO: add default config
 
+	this.port = options.port;
+
 	this.name = "http";
 
 	// for outbound requests, the request module

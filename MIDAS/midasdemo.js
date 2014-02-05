@@ -13,8 +13,10 @@ var Eve = require('../eve.js');
 
 var app = express();
 
+var port = process.env.PORT || 3000;
+
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', port);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.favicon());
@@ -32,8 +34,8 @@ console.log(path.join(__dirname, 'public'));
 
 // 
 var eveOptions = {
-	services: { topics: {}, p2p: {transports: {localTransport: {}, httpRequest: {} } } }, // httpRequest 
-	agents: {Remco: {filename: "workerAgent.js" }, Giovanni: {filename: "workerAgent.js"}, Peet: {filename: "managerAgent.js"} }
+	services: { topics: {}, p2p: {transports: {localTransport: {}, httpRequest: {port: port} } } }, // httpRequest 
+	agents: {Remco: {filename: "workerAgent.js", options: {port: port} }, Giovanni: {filename: "workerAgent.js", options: {port: port} }, Peet: {filename: "managerAgent.js", options: {port: port} } }
 } 
 var eve = new Eve(eveOptions);
 

@@ -1,13 +1,16 @@
 {
-	"name": "eve-nodejs-threads",
+	"name": "MIDAS-Eve",
 	"author": "Remco Tukker <remco almende org>",
 	"description": "NodeJS platform for Eve agents",
 	"version": "0.0.1",
 	"dependencies": {
-		"request": "latest",
-		"eventemitter2": "latest"
+	    "express": "3.4.6",
+	    "jade": "*",
+		"eventemitter2": "*",		
+		"request": "latest"
 	},
  	"engines": {
-    	"node": ">=0.10"
+    	"node": "0.10.x"
   	}
 }
+

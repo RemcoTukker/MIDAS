@@ -34,9 +34,6 @@ window.onload = function() {
 
 
 
-
-
-
   /**
    * This function communicates with the agent by construnction a HTTP POST request.
    *
@@ -84,12 +81,7 @@ window.onload = function() {
     }
   }
 
-
-
-
-
-
-  function getHistoryData() {
+  function getScheduleData() {
     askAgent(agentUrl + agentName, "getSchedule", {}, function(response) {
 		console.log(response);      
 
@@ -106,126 +98,40 @@ window.onload = function() {
   }
 
 
-  /**
-   * This function loops through the array of entrees. There is one state entree per agent.
-   * These are then handled in the handleAgentData function.
-   *
-   * @param {Object} data
-   * @parem {String} method | history / current
-   */
-  function processData(data, method) {
-    if (data) {
-      var dataObject = JSON.parse(data);
-      for (var agentId in dataObject) {
-        if (dataObject.hasOwnProperty(agentId)) {
-          if (method == "current") {
-            handleAgentData(dataObject, agentId);
-          }
-          else {
-            handleAgentHistory(dataObject, agentId);
-          }
-        }
-      }
-    }
-  }
+  function addButton() {
 
+	var controlDiv = document.getElementById("agentControls");
 
+	var tf1 = "<input type='text' value='' id='t1'>";
+    var button1  = "<input type='button' value='reportNC', id='b1'>";
+  //  var button2 = "<input type='button' value='Reschedule', id='b2'>";
 
-
-  /**
-   * This adds control buttons for the agents to the GUI
-   * There are two settings, on and off.
-   *
-   * @param {String} agentId
-   */
-  function createNewAgentUI(agentId) {
-    var controlDiv = document.getElementById("agentControls");
-
-    var onButtonHTML  = "<input type='button' value='switch " + agentId + " on'  id='onBtn_" + agentId +"'>";
-    var offButtonHTML = "<input type='button' value='switch " + agentId + " off' id='offBtn_"+ agentId +"'>";
 
     var newNode = document.createElement('div');
-    newNode.innerHTML = onButtonHTML.concat(offButtonHTML);
+    newNode.innerHTML = tf1.concat(button1);
+	//newNode.innerHTML = button1
 
     controlDiv.appendChild(newNode);
 
-    bindButton("onBtn_" + agentId, "turnOn" , agentId);
-    bindButton("offBtn_" +agentId, "turnOff", agentId);
-  }
+	var b1 = document.getElementById('b1');
+	var t1 = document.getElementById('t1');
 
-
-  /**
-   * This function binds a function to the onclick event of a button.
-   *
-   * @param buttonId
-   * @param action
-   * @param agentId
-   */
-  function bindButton(buttonId, action, agentId) {
-    var button = document.getElementById(buttonId);
-    button.onclick = function() {
-      askAgent(agentUrl + agentId,"sendMessage",{action: action}, function(response) {
-        var receivedMsg = JSON.parse(response);
-        var result = receivedMsg['result'];
-        var commandSpan = document.getElementById("commandStatus");
-        switch(action) {
-          case "turnOn":
-            if (result == "success") {
-              commandSpan.innerHTML = "I asked " + agentId + " to switch on.";
-            }
-            else {
-              commandSpan.innerHTML = "I failed to ask " + agentId + " to switch on.";
-            }
-            break;
-          case "turnOff":
-            if (result == "success") {
-              commandSpan.innerHTML = "I asked " + agentId + " to switch off.";
-            }
-            else {
-              commandSpan.innerHTML = "I failed to ask " + agentId + " to switch off.";
-            }
-            break;
-        }
-      });
-    }
-  }
-
-
-  /**
-   * This function places an item from the agent into the dataset.
-   *
-   * @param {JSON.Stringified object} data  | {date:"YYYY-MM-DD",time:"HH:MM:SS",status:"OPEN/CLOSED"}
-   * @param {String} agentId
-   */
-  function insertIntoDataset(data, agentId) {
-    // check if the data is new
-    if (states[agentId] != data) {
-      // convert the stringified JSON object back into an Object
-      var dataObject = JSON.parse(data);
-      var timestamp = dataObject.date.concat("T",dataObject.time);
-      var content = getContent(dataObject, agentId);
-
-      // clear the command span
-      var commandSpan = document.getElementById("commandStatus");
-      commandSpan.innerHTML = "";
-
-      // add to the dataset
-      items.add({content: content, start: timestamp})
-    }
-    // remember the last entree so we do not get duplicates in our dataset
-    lastData = data;
+	b1.onclick = function() {
+		console.log("!");
+		askAgent(agentUrl + agentName, "reportNC", {cause:t1.value}, function(response) {
+			console.log(response);
+		})
+	}
   }
 
 
   // get History on start.
-  getHistoryData();
-  // this creates the GUI elements, it will not add dupicate entrees.
-  // the reason to do this here is that maybe we only want gui elements for sensors that
-  // have been active in the last x time
-  //getAgentData();
+  getScheduleData();
+
+  addButton();
 
   // recheck the agent for new information
   var refresher = window.setInterval( function() {
-    getHistoryData();
+    getScheduleData();
   }, updateInterval);
 }
