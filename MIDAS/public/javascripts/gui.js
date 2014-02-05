@@ -24,7 +24,7 @@ window.onload = function() {
   var time = date.getTime();
   var options = {
     start: time - 2000000,
-    end: time + 1000000,
+    end: time + 50000000,
     showCurrentTime:true,
     orientation:'bottom',
     height:250
