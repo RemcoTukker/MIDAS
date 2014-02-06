@@ -13,8 +13,6 @@ USAGE
 	make sure you have the latest version of NodeJS
 	clone this repo
 	npm install
-	cd MIDAS
-	npm install
 	node MIDAS/midasdemo
 
 	This will launch a couple of agents communicating with one another. 
@@ -23,6 +21,4 @@ USAGE
 	localhost:3000/gui/worker/Giovanni
 	localhost:3000/gui/manager/Peet
 
-
-NB	I know that the directory structure is not ideal, but it works well enough for now :-)
 
